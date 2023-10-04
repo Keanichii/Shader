@@ -16,7 +16,16 @@ public class PlayerControl : MonoBehaviour
     public float frictionAmount;
 
     public float lastOnGroundTime;
+    [SerializeField] Transform groundCheckPoint;
+    [SerializeField] LayerMask groundLayer;
 
+    public float jumpForce;
+    [Range(0f, 1f)] public float jumpCutMultiplier;
+    public float lastJumpTime;
+    public float jumpCoyoteTime;
+    public float jumpBufferTime;
+    bool isJumping = false;
+    bool jumpInputReleased;
 
     void Start()
     {
@@ -27,18 +36,40 @@ public class PlayerControl : MonoBehaviour
 
     private void Update()
     {
+        //Input Handler
         moveInput.x = Input.GetAxis("Horizontal");
-
+        
+        //Check Direction to Face
         if (moveInput.x != 0)
             CheckDirectionToFace(moveInput.x > 0);
 
-        //Check Ground
+        //Coyote Timer
         lastOnGroundTime -= Time.deltaTime;
 
-        /*if (Physics2D.OverlapBox(groundCheckPoint.position, groundCheckSize, 0, groundLayer))
-            lastOnGroundTime = 0.1f;*/
 
+        if (Physics2D.Raycast(groundCheckPoint.position, Vector2.down, 0.4f, groundLayer))
+        {
+            lastOnGroundTime = jumpCoyoteTime;
+            isJumping = false;
+            Debug.Log("on ground");
+        }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (lastOnGroundTime > 0 && !isJumping)
+                Jump();
+        }
+        
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            if (rb.velocity.y > 0 && isJumping)
+            {
+                rb.AddForce(Vector2.down * rb.velocity.y * (1 - jumpCutMultiplier), ForceMode2D.Impulse);
+            }
+
+            jumpInputReleased = true;
+
+        }
     }
 
 
@@ -78,6 +109,7 @@ public class PlayerControl : MonoBehaviour
             rb.AddForce(-amount * Vector2.right, ForceMode2D.Impulse);
         }
 
+        
     }
 
     public void Turn()
@@ -94,5 +126,16 @@ public class PlayerControl : MonoBehaviour
         if (isMovingRight != isFacingRight)
             Turn();
     }
+
+
+    public void Jump()
+    {
+        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        lastJumpTime = jumpBufferTime;
+        isJumping = true;
+        jumpInputReleased = false;
+    }
+
+
 
 }
