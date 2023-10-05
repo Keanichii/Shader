@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerControl : MonoBehaviour
 {
-
+    #region VARIABLES 
     Rigidbody2D rb;
 
     Vector2 moveInput;
@@ -12,23 +12,41 @@ public class PlayerControl : MonoBehaviour
     public float acceleration = 0.11f;
     public float decceleration = -0.11f;
     public float velPower = 3;
-    public bool isFacingRight;
     public float frictionAmount;
 
-    public float lastOnGroundTime;
+    [Header("Ground & Wall Checks")]
     [SerializeField] Transform groundCheckPoint;
-    [SerializeField] LayerMask groundLayer;
+    [Space(10)]
+    [SerializeField] Transform frontWallCheckPoint;
+    [SerializeField] Transform backWallCheckPoint;
 
+    [Header("Jump")]
+    public float lastOnGroundTime;
     public float jumpForce;
     [Range(0f, 1f)] public float jumpCutMultiplier;
     public float lastJumpTime;
     public float jumpCoyoteTime;
     public float jumpBufferTime;
-    bool isJumping = false;
-    [SerializeField]bool jumpInputReleased;
+    [Space(10)]
 
+    bool isFacingRight;
+    bool isJumping = false;
+    [SerializeField] bool isJumpCut;
+
+
+    [Header("Gravity")]
     float gravityScale = 1;
     public float gravityMultiplier;
+    public float maxFallSpeed;
+
+    [Header("Layers & Tags")]
+    [SerializeField] LayerMask groundLayer;
+
+
+
+    #endregion
+
+
 
     void Start()
     {
@@ -60,6 +78,8 @@ public class PlayerControl : MonoBehaviour
 
         if (lastOnGroundTime > 0 && lastJumpTime > 0 && !isJumping)
         {
+            isJumping = true;
+            isJumpCut = false;
             Jump();
         }
             
@@ -69,21 +89,23 @@ public class PlayerControl : MonoBehaviour
             OnJump();
         }
 
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            OnJumpUp();
-        }
-        
+        #region GRAVITY
 
         if (rb.velocity.y < 0f)
         {
-            rb.gravityScale = gravityScale * gravityMultiplier;
+            SetGravityScale(rb.gravityScale * gravityMultiplier);
+            rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -maxFallSpeed));
+        } 
+        else if (isJumpCut)
+        {
+
+            rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -maxFallSpeed));
         }
         else
         {
-            rb.gravityScale = gravityScale;
+            SetGravityScale(rb.gravityScale);
         }
-
+        #endregion
 
     }
 
@@ -132,7 +154,7 @@ public class PlayerControl : MonoBehaviour
         rb.AddForce(movement * Vector2.right, ForceMode2D.Force);
     }
 
-
+    #region TURN
     public void Turn()
     {
         Vector3 scale = transform.localScale;
@@ -147,16 +169,18 @@ public class PlayerControl : MonoBehaviour
         if (isMovingRight != isFacingRight)
             Turn();
     }
+    #endregion
 
 
+    #region JUMP
     public void Jump()
     {
-        rb.velocity = new Vector2(rb.velocity.x, 0);
-        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         lastJumpTime = 0;
         lastOnGroundTime = 0;
-        isJumping = true;
-        jumpInputReleased = false;
+        
+        rb.velocity = new Vector2(rb.velocity.x, 0);
+        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        
     }
 
     public void OnJump()
@@ -168,12 +192,16 @@ public class PlayerControl : MonoBehaviour
     public void OnJumpUp()
     {
         
-        rb.AddForce(Vector2.down * rb.velocity.y * (1 - jumpCutMultiplier), ForceMode2D.Impulse);
-        
-
-        jumpInputReleased = true;
+        isJumpCut = true;
         lastJumpTime = 0;
     }
+    #endregion
+
+    public void SetGravityScale(float scale)
+    {
+        rb.gravityScale = scale;
+    }
+
 
 
 }

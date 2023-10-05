@@ -1553,20 +1553,22 @@ MonoBehaviour:
   acceleration: 9
   decceleration: 9
   velPower: 0.9
-  isFacingRight: 0
   frictionAmount: 0.5
-  lastOnGroundTime: 0
   groundCheckPoint: {fileID: 115586486}
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
+  frontWallCheckPoint: {fileID: 0}
+  backWallCheckPoint: {fileID: 0}
+  lastOnGroundTime: 0
   jumpForce: 9
   jumpCutMultiplier: 0.5
   lastJumpTime: 0
   jumpCoyoteTime: 0.15
   jumpBufferTime: 0.1
-  jumpInputReleased: 0
+  isJumpCut: 0
   gravityMultiplier: 3
+  maxFallSpeed: 10
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
