@@ -25,7 +25,10 @@ public class PlayerControl : MonoBehaviour
     public float jumpCoyoteTime;
     public float jumpBufferTime;
     bool isJumping = false;
-    bool jumpInputReleased;
+    [SerializeField]bool jumpInputReleased;
+
+    float gravityScale = 1;
+    public float gravityMultiplier;
 
     void Start()
     {
@@ -45,31 +48,43 @@ public class PlayerControl : MonoBehaviour
 
         //Coyote Timer
         lastOnGroundTime -= Time.deltaTime;
+        lastJumpTime -= Time.deltaTime; 
 
 
-        if (Physics2D.Raycast(groundCheckPoint.position, Vector2.down, 0.4f, groundLayer))
+        if (Physics2D.Raycast(groundCheckPoint.position, Vector2.down, 0.1f, groundLayer))
         {
             lastOnGroundTime = jumpCoyoteTime;
             isJumping = false;
             Debug.Log("on ground");
         }
 
+        if (lastOnGroundTime > 0 && lastJumpTime > 0 && !isJumping)
+        {
+            Jump();
+        }
+            
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (lastOnGroundTime > 0 && !isJumping)
-                Jump();
+            OnJump();
         }
-        
+
         if (Input.GetKeyUp(KeyCode.Space))
         {
-            if (rb.velocity.y > 0 && isJumping)
-            {
-                rb.AddForce(Vector2.down * rb.velocity.y * (1 - jumpCutMultiplier), ForceMode2D.Impulse);
-            }
-
-            jumpInputReleased = true;
-
+            OnJumpUp();
         }
+        
+
+        if (rb.velocity.y < 0f)
+        {
+            rb.gravityScale = gravityScale * gravityMultiplier;
+        }
+        else
+        {
+            rb.gravityScale = gravityScale;
+        }
+
+
     }
 
 
@@ -78,7 +93,27 @@ public class PlayerControl : MonoBehaviour
 
     void FixedUpdate()
     {
+        Run();
+         
+        //friction
+        //check if player isn't accelerating
+        if (Mathf.Abs(moveInput.x) < 0.01f)
+        {
+            //use the smaller value between current velocity and friction amount
+            float amount = Mathf.Min(Mathf.Abs(rb.velocity.x), Mathf.Abs(frictionAmount));
+            
+            //sets to movement direction
+            amount *= Mathf.Sign(rb.velocity.x);
 
+            //applies an equal but opposite force against movement direction
+            rb.AddForce(-amount * Vector2.right, ForceMode2D.Impulse);
+        }
+
+    }
+
+
+    public void Run()
+    {
         //direction
         float targetSpeed = moveInput.x * moveSpeed;
 
@@ -94,23 +129,9 @@ public class PlayerControl : MonoBehaviour
         float movement = Mathf.Pow(Mathf.Abs(delSpeed) * accelRate, velPower) * Mathf.Sign(delSpeed);
 
         //applies force to rigidbody
-        rb.AddForce(movement * Vector2.right, ForceMode2D.Force); 
-
-        //check if player isn't accelerating
-        if (Mathf.Abs(moveInput.x) < 0.01f)
-        {
-            //use the smaller value between current velocity and friction amount
-            float amount = Mathf.Min(Mathf.Abs(rb.velocity.x), Mathf.Abs(frictionAmount));
-            
-            //sets to movement direction
-            amount *= Mathf.Sign(rb.velocity.x);
-
-            //applies an equal but opposite force against movement direction
-            rb.AddForce(-amount * Vector2.right, ForceMode2D.Impulse);
-        }
-
-        
+        rb.AddForce(movement * Vector2.right, ForceMode2D.Force);
     }
+
 
     public void Turn()
     {
@@ -130,12 +151,29 @@ public class PlayerControl : MonoBehaviour
 
     public void Jump()
     {
+        rb.velocity = new Vector2(rb.velocity.x, 0);
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-        lastJumpTime = jumpBufferTime;
+        lastJumpTime = 0;
+        lastOnGroundTime = 0;
         isJumping = true;
         jumpInputReleased = false;
     }
 
+    public void OnJump()
+    {
+        lastJumpTime = jumpBufferTime;
+        
+    }
+
+    public void OnJumpUp()
+    {
+        
+        rb.AddForce(Vector2.down * rb.velocity.y * (1 - jumpCutMultiplier), ForceMode2D.Impulse);
+        
+
+        jumpInputReleased = true;
+        lastJumpTime = 0;
+    }
 
 
 }
