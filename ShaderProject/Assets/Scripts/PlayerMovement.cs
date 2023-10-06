@@ -53,11 +53,17 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Layers & Tags")]
 	[SerializeField] private LayerMask _groundLayer;
+
+	[Header("Camera Tingz")]
+	[SerializeField] private GameObject playerFollowObject; 
+
+	private CameraMovement cameraMovement;
 	#endregion
 
     private void Awake()
 	{
 		RB = GetComponent<Rigidbody2D>();
+		cameraMovement = playerFollowObject.GetComponent<CameraMovement>();
 	}
 
 	private void Start()
@@ -84,12 +90,12 @@ public class PlayerMovement : MonoBehaviour
 		if (_moveInput.x != 0)
 			CheckDirectionToFace(_moveInput.x > 0);
 
-		if(Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.C) || Input.GetKeyDown(KeyCode.J))
+		if(Input.GetKeyDown(KeyCode.Space))
         {
 			OnJumpInput();
         }
 
-		if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.C) || Input.GetKeyUp(KeyCode.J))
+		if (Input.GetKeyUp(KeyCode.Space))
 		{
 			OnJumpUpInput();
 		}
@@ -300,12 +306,27 @@ public class PlayerMovement : MonoBehaviour
 
 	private void Turn()
 	{
-		//stores scale and flips the player along the x axis, 
-		Vector3 scale = transform.localScale; 
-		scale.x *= -1;
-		transform.localScale = scale;
+		if (!IsFacingRight)
+        {
+			//flips through rotation
+			Vector3 rotation = new Vector3(transform.rotation.x, 180f, 0);
+			transform.rotation = Quaternion.Euler(rotation);
+			IsFacingRight = !IsFacingRight;
 
-		IsFacingRight = !IsFacingRight;
+			//turn the camera follow object the same way as the player
+			cameraMovement.CallTurn();
+		}
+		
+		else
+        {
+			Vector3 rotation = new Vector3(transform.rotation.x, 0f, 0);
+			transform.rotation = Quaternion.Euler(rotation);
+			IsFacingRight = !IsFacingRight;
+
+			//turn the camera follow object the same way as the player
+			cameraMovement.CallTurn();
+		}
+
 	}
     #endregion
 
