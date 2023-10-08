@@ -2388,6 +2388,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be94c8adce7c5d649b204e3553eca9a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  allVirtualCameras:
+  - {fileID: 980883497}
+  fallPanAmount: 0.25
+  fallYPanAmount: 0.35
+  dampingChangeThreshold: -15
 --- !u!1 &1474540936
 GameObject:
   m_ObjectHideFlags: 3

@@ -4,12 +4,6 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-	//Scriptable object which holds all the player's movement parameters. If you don't want to use it
-	//just paste in all the parameters, though you will need to manuly change all references in this script
-
-	//HOW TO: to add the scriptable object, right-click in the project window -> create -> Player Data
-	//Next, drag it into the slot in playerMovement on your player
-
 	public PlayerData Data;
 
 	#region Variables
@@ -58,6 +52,7 @@ public class PlayerMovement : MonoBehaviour
 	[SerializeField] private GameObject playerFollowObject; 
 
 	private CameraMovement cameraMovement;
+	private float fallSpeedDampingChangeThreshold;
 	#endregion
 
     private void Awake()
@@ -70,6 +65,7 @@ public class PlayerMovement : MonoBehaviour
 	{
 		SetGravityScale(Data.gravityScale);
 		IsFacingRight = false;
+		fallSpeedDampingChangeThreshold = CameraManager.instance.dampingChangeThreshold;
 	}
 
 	private void Update()
@@ -212,7 +208,21 @@ public class PlayerMovement : MonoBehaviour
 			//Default gravity if standing on a platform or moving upwards
 			SetGravityScale(Data.gravityScale);
 		}
-		#endregion
+        #endregion
+
+        #region CAMERA
+        if(RB.velocity.y < fallSpeedDampingChangeThreshold && !CameraManager.instance.IsLerping && !CameraManager.instance.LerpedFromPlayerFalling)
+        {
+			CameraManager.instance.LerpYDamping(true);
+        }
+
+		if (RB.velocity.y >= 0f && !CameraManager.instance.IsLerping && CameraManager.instance.LerpedFromPlayerFalling)
+        {
+			CameraManager.instance.LerpedFromPlayerFalling = false;
+
+			CameraManager.instance.LerpYDamping(false);
+        }
+        #endregion
     }
 
     private void FixedUpdate()
@@ -439,5 +449,3 @@ public class PlayerMovement : MonoBehaviour
 	}
     #endregion
 }
-
-// created by Dawnosaur :D
