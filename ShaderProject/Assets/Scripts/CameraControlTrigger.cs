@@ -7,6 +7,38 @@ using UnityEditor;
 public class CameraControlTrigger : MonoBehaviour
 {
     public CustomInspectorObjects customInspectorObjects;
+
+    private Collider2D coll;
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            //if pan camera option on inspector is checked
+            if (customInspectorObjects.panCameraOnContact)
+            {
+                //pan the camera to scene
+                CameraManager.instance.PanCameraStart(customInspectorObjects.panDistance, customInspectorObjects.panTime, customInspectorObjects.panDirection, true);
+            }
+        }
+    }
+
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            //if pan camera option on inspector is checked
+            if (customInspectorObjects.panCameraOnContact)
+            {
+                //pan the camera back
+                CameraManager.instance.PanCameraStart(customInspectorObjects.panDistance, customInspectorObjects.panTime, customInspectorObjects.panDirection, false);
+
+            }
+        }
+    }
+
+
 }
 
 [System.Serializable]
