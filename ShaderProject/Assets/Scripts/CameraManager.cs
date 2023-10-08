@@ -11,7 +11,7 @@ public class CameraManager : MonoBehaviour
 
     [Header("Controls for lerping Y Damping during player jump/fall")]
     [SerializeField] private float fallPanAmount = 0.25f;
-    [SerializeField] private float fallYPanAmount = 0.35f;
+    [SerializeField] private float fallPanTime = 0.35f;
     public float dampingChangeThreshold = -15f;
 
 
@@ -48,12 +48,12 @@ public class CameraManager : MonoBehaviour
 
         #region Lerp the Y Damping
 
-        public void LerpYDamping(bool isFalling)
+    public void LerpYDamping(bool isFalling)
         {
             lerpYPanCoroutine = StartCoroutine(LerpYAction(isFalling));
         }
 
-        private IEnumerator LerpYAction(bool isFalling)
+    private IEnumerator LerpYAction(bool isFalling)
         {
             IsLerping = true;
 
@@ -74,11 +74,11 @@ public class CameraManager : MonoBehaviour
 
         //lerp the pan amount
         float elapsedTime = 0f;
-        while (elapsedTime < fallPanAmount)
+        while (elapsedTime < fallPanTime)
         {
             elapsedTime += Time.deltaTime;
 
-            float lerpedPanAmount = Mathf.Lerp(startDampAmount, endDampAmount, elapsedTime / fallPanAmount);
+            float lerpedPanAmount = Mathf.Lerp(startDampAmount, endDampAmount, elapsedTime / fallPanTime);
             framingTransposer.m_YDamping = lerpedPanAmount; 
 
 
