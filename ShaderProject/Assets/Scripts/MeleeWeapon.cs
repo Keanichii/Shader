@@ -16,7 +16,7 @@ public class MeleeWeapon : MonoBehaviour
     private Vector2 direction;
     private bool collided;
     private bool downwardStrike;
-    private bool trigger;
+   
 
     private void Start()
     {
@@ -28,10 +28,6 @@ public class MeleeWeapon : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Backspace))
-        {
-            trigger = true;
-        }
         //Move player in opposite direction
         HandleMovement();
     }
@@ -130,7 +126,7 @@ public class MeleeWeapon : MonoBehaviour
         collided = false;
         //Turns off the downwardStrike bool
         downwardStrike = false;
-        trigger = false;
+        
     }
 
     #endregion
