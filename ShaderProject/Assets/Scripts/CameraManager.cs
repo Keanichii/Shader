@@ -164,6 +164,10 @@ public class CameraManager : MonoBehaviour
 
     #region Swap Cameras
 
+    public void SwapCamera(CinemachineVirtualCamera cameraOnLeft, CinemachineVirtualCamera cameraOnRight)
+    {
+
+    }
 
 
     #endregion

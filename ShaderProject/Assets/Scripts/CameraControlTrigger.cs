@@ -8,7 +8,7 @@ public class CameraControlTrigger : MonoBehaviour
 {
     public CustomInspectorObjects customInspectorObjects;
 
-    private Collider2D coll;
+    //private Collider2D coll;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

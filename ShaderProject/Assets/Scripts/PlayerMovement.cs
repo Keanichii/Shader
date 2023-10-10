@@ -25,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
 	public float LastOnWallLeftTime { get; private set; }
 
 	//Jump
+	public bool isGrounded;
 	private bool _isJumpCut;
 	private bool _isJumpFalling;
 
@@ -104,6 +105,7 @@ public class PlayerMovement : MonoBehaviour
 			if (Physics2D.OverlapBox(_groundCheckPoint.position, _groundCheckSize, 0, _groundLayer) && !IsJumping) //checks if set box overlaps with ground
 			{
 				LastOnGroundTime = Data.coyoteTime; //if so sets the lastGrounded to coyoteTime
+				isGrounded = true;
             }		
 
 			//Right Wall Check
@@ -346,6 +348,8 @@ public class PlayerMovement : MonoBehaviour
 		//Ensures we can't call Jump multiple times from one press
 		LastPressedJumpTime = 0;
 		LastOnGroundTime = 0;
+		isGrounded = false;
+
 
 		#region Perform Jump
 		//We increase the force applied if we are falling
