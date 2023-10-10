@@ -50,8 +50,7 @@ public class MeleeWeapon : MonoBehaviour
 
     private void HandleCollision(Enemies objHealth)
     {
-        if (trigger)
-        {
+        
             Debug.Log("Is attacking");
             //Checks to see if the GameObject allows for upward force and if the strike is downward as well as grounded
             if (objHealth.giveUpwardForce && Input.GetAxis("Vertical") < 0 && !player.isGrounded)
@@ -95,7 +94,7 @@ public class MeleeWeapon : MonoBehaviour
 
             //Coroutine that turns off all the bools related to melee attack collision and direction
             StartCoroutine(NoLongerColliding());
-        }
+        
     
     }
 

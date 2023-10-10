@@ -60,17 +60,17 @@ public class MeleeAttackManager : MonoBehaviour
         if (meleeAttack && Input.GetAxis("Vertical") > 0)
         {
             //Turns on the animation for the player to perform an upward melee attack
-            anim.SetTrigger("UpwardMelee");
+            //anim.SetTrigger("UpwardMelee");
             //Turns on the animation on the melee weapon to show the swipe area for the melee attack upwards
-            meleeAnimator.SetTrigger("UpwardMeleeSwipe");
+            meleeAnimator.SetTrigger("MeleeSwipeUp");
         }
         //Checks to see if meleeAttack is true and pressing down while also not grounded
         if (meleeAttack && Input.GetAxis("Vertical") < 0 && !player.isGrounded)
         {
             //Turns on the animation for the player to perform a downward melee attack
-            anim.SetTrigger("DownwardMelee");
+            //anim.SetTrigger("DownwardMelee");
             //Turns on the animation on the melee weapon to show the swipe area for the melee attack downwards
-            meleeAnimator.SetTrigger("DownwardMeleeSwipe");
+            meleeAnimator.SetTrigger("MeleeSwipeDown");
         }
         //Checks to see if meleeAttack is true and not pressing any direction
         if ((meleeAttack && Input.GetAxis("Vertical") == 0)
@@ -78,9 +78,9 @@ public class MeleeAttackManager : MonoBehaviour
             || meleeAttack && (Input.GetAxis("Vertical") < 0 && player.isGrounded))
         {
             //Turns on the animation for the player to perform a forward melee attack
-            anim.SetTrigger("ForwardMelee");
+            //anim.SetTrigger("ForwardMelee");
             //Turns on the animation on the melee weapon to show the swipe area for the melee attack forwards
-            meleeAnimator.SetTrigger("ForwardMeleeSwipe");
+            meleeAnimator.SetTrigger("MeleeSwipe");
         }
     }
 }
