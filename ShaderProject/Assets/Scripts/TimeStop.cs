@@ -7,6 +7,15 @@ public class TimeStop : MonoBehaviour
     private float speed;
     private bool restoreTime;
 
+    private ParticleSystem darkBubble;
+    //anim to trigger "Damaged" stage (for later on)
+    //private Animator anim;
+
+    private void Awake()
+    {
+        darkBubble = GetComponentInChildren<ParticleSystem>();
+    }
+
     private void Start()
     {
         restoreTime = false;
@@ -43,7 +52,9 @@ public class TimeStop : MonoBehaviour
             restoreTime = true;
         }
 
+        darkBubble.Play();
         Time.timeScale = changeTime;
+        Debug.Log("Damaged");
     }
 
 
