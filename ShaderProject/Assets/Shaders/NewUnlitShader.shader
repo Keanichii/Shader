@@ -4,24 +4,33 @@ Shader "Unlit/NewUnlitShader"
     {
         //Fields to pass in maps from inspector
         _MainTex ("Texture", 2D) = "white" {}
-        _AmbientOcclusionMap ("AmbientOcclusionMap", Cube) = "white" {}
+        _Mask ("Mask", 2D) = "gray" {}
+        _Normal ("Normal Map", 2D) = "gray" {}
         _MainColor ("Color", Color) = (1,1,1,1)
-        _ForReal ("Int Display", Integer) = 100 
+        _LightColor ("Light Color", Color) = (1,1,1,1)
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
-        LOD 100
+        Cull Off
+        ZWrite Off
+        Blend One OneMinusSrcAlpha
+
+        Tags {"Queue" = "Transparent" "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" }
+        
 
         Pass
         {
+            Tags { "LightMode" = "Universal2D"}
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            // make fog work
-            #pragma multi_compile_fog
-
+           
             #include "UnityCG.cginc"
+            
+            //declare variables
+
+            sampler2D _MainTex;
+            float4 _LightColor;
 
 
             //struct is for you to declare multiple variables at the same time, and attach semantics to them
@@ -30,22 +39,19 @@ Shader "Unlit/NewUnlitShader"
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
-                float3 tangent : TANGENT;
-                float3 normal : NORMAL; 
+                float3 normal : TEXCOORD1;
             };
 
             //output to pixel shader
             struct v2f
             {
                 float2 uv : TEXCOORD0;
-                UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
+                float2 lightingUV : TEXCOORD2;
+                float4 diffuse : COLOR;
             };
 
-            //declare variables
-            sampler2D _MainTex;
-            //float4 _MainTex_ST;
-            float4 _MainColor;
+            
 
             //vertex shader
             v2f vert (appdata input)
@@ -54,32 +60,35 @@ Shader "Unlit/NewUnlitShader"
                 //transform vertex position to clip space (screen space)
                 output.vertex = UnityObjectToClipPos(input.vertex);
                 output.uv = input.uv;
-                UNITY_TRANSFER_FOG(output,output.vertex);
                 //===========================================================
 
-                //new code goes here
+                float3 worldPos = mul(input.vertex, UNITY_MATRIX_M);
+                float3 lightVec = normalize(_WorldSpaceLightPos0 - worldPos);
+                float brightness = dot (input.normal, lightVec);
+                float brightnessClamped = max (brightness, 0);
+
+                output.diffuse = brightness * _LightColor;
 
 
-
+                //output.lightingUV = half2(ComputeScreenPos(output.vertex / output.vertex.w).xy);
 
 
                 return output;
             }
 
 
+            fixed4 _MainColor;
+
             //pixel shader 
-            fixed4 frag (v2f input) : SV_Target
+            float4 frag (v2f input) : SV_TARGET
             {
                 // sample the texture
-                fixed4 color = tex2D(_MainTex, input.uv);
-                // apply fog
-                UNITY_APPLY_FOG(input.fogCoord, color);
+                float4 color = tex2D(_MainTex, input.uv);
+                float2 lighting = input.lightingUV;
+                color.rgb *= color.a;
 
-
-                float4 output = color * _MainColor;
-
-                //new code goes here 
-
+                color *= input.diffuse;
+                color *= _MainColor;
 
 
 
@@ -87,12 +96,7 @@ Shader "Unlit/NewUnlitShader"
 
 
 
-
-
-
-
-
-                return output;
+                return color;
             }
             ENDCG
         }
