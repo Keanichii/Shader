@@ -8,6 +8,7 @@ Shader "Unlit/NewUnlitShader"
         _Normal ("Normal Map", 2D) = "gray" {}
         _MainColor ("Color", Color) = (1,1,1,1)
         _LightColor ("Light Color", Color) = (1,1,1,1)
+        [MaterialToggle] PixelSnap ("Pixel Snap", Float) = 0
     }
     SubShader
     {
@@ -15,18 +16,27 @@ Shader "Unlit/NewUnlitShader"
         ZWrite Off
         Blend One OneMinusSrcAlpha
 
-        Tags {"Queue" = "Transparent" "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" }
+        Tags {"Queue" = "Transparent" 
+        "RenderType" = "Transparent" 
+        "PreviewType"="Plane"
+        "CanUseSpriteAtlas"="True"
+        "IgnoreProjector"="True"
+        }
         
 
         Pass
         {
-            Tags { "LightMode" = "Universal2D"}
+            //Tags { "LightMode" = "Universal2D"}
+            
+
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
            
             #include "UnityCG.cginc"
             
+            #define TAU 6.283185307179586
+
             //declare variables
 
             sampler2D _MainTex;
@@ -39,7 +49,7 @@ Shader "Unlit/NewUnlitShader"
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
-                float3 normal : TEXCOORD1;
+                float3 normal : NORMAL;
             };
 
             //output to pixel shader
@@ -47,7 +57,8 @@ Shader "Unlit/NewUnlitShader"
             {
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
-                float2 lightingUV : TEXCOORD2;
+                //float2 lightingUV : TEXCOORD2;
+                float3 normal : TEXCOORD1;
                 float4 diffuse : COLOR;
             };
 
@@ -64,14 +75,16 @@ Shader "Unlit/NewUnlitShader"
 
                 float3 worldPos = mul(input.vertex, UNITY_MATRIX_M);
                 float3 lightVec = normalize(_WorldSpaceLightPos0 - worldPos);
-                float brightness = dot (input.normal, lightVec);
-                float brightnessClamped = max (brightness, 0);
+                //float3 inverseNormal = 0 - input.normal.xyz;
+                //float brightness = dot (inverseNormal, lightVec);
+                //float brightnessClamped = max (brightness, 0);
 
-                output.diffuse = brightness * _LightColor;
+                //output.diffuse = brightness * _LightColor;
 
 
                 //output.lightingUV = half2(ComputeScreenPos(output.vertex / output.vertex.w).xy);
 
+                output.normal = input.normal;
 
                 return output;
             }
@@ -84,16 +97,16 @@ Shader "Unlit/NewUnlitShader"
             {
                 // sample the texture
                 float4 color = tex2D(_MainTex, input.uv);
-                float2 lighting = input.lightingUV;
+                //float2 lighting = input.lightingUV;
                 color.rgb *= color.a;
+                //===============================================================
 
-                color *= input.diffuse;
                 color *= _MainColor;
 
 
+                float t = saturate (cos((input.uv.y - _Time.y * 0.05) * TAU * 15) + 1);
 
-
-
+                color *= t;
 
 
                 return color;
