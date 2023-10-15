@@ -1,28 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class PostProcessingGlobal : MonoBehaviour
 {
     [SerializeField]
     private Transform player;
-    private PostProcessVolume globalVol;
-    private Vignette vignette;
+    private Volume globalVol;
+    private Vignette vnt;
 
-
+    [SerializeField]
     private Vector3 screenPosition;
 
     private void Awake()
     {
-        globalVol = GetComponent<PostProcessVolume>();
-        globalVol.profile.TryGetSettings<Vignette>(out vignette);
+        globalVol = GetComponent<Volume>();
+        globalVol.profile.TryGet(out vnt);
     }
 
-    private void Update()
+    public void Update()
     {
-        TransformWorldToScreen(player.position);
-        vignette.center.value = screenPosition;
+        //TransformWorldToScreen(player.position);
+        //vnt.center.value = new Vector2(screenPosition.x, screenPosition.y);
     }
 
     private void TransformWorldToScreen(Vector3 worldPosition)
