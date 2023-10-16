@@ -75,7 +75,7 @@ Shader "Unlit/NewUnlitShader"
 
                 float3 worldPos = mul(input.vertex, UNITY_MATRIX_M);
                 float3 lightVec = normalize(_WorldSpaceLightPos0 - worldPos);
-                //float3 inverseNormal = 0 - input.normal.xyz;
+                output.normal = input.normal;
                 //float brightness = dot (inverseNormal, lightVec);
                 //float brightnessClamped = max (brightness, 0);
 
@@ -84,7 +84,7 @@ Shader "Unlit/NewUnlitShader"
 
                 //output.lightingUV = half2(ComputeScreenPos(output.vertex / output.vertex.w).xy);
 
-                output.normal = input.normal;
+                //output.normal = input.normal;
 
                 return output;
             }
@@ -108,8 +108,8 @@ Shader "Unlit/NewUnlitShader"
 
                 color *= t;
 
-
-                return color;
+                float3 output = input.normal * 2 - 1;
+                return float4 (output, 1);
             }
             ENDCG
         }
