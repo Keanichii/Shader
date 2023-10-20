@@ -5269,8 +5269,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -5.53, y: -2.36, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1770309743014431726}
   - {fileID: 8525474966209475024}
@@ -5440,7 +5440,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultForce: 150
-  upwardsForce: 400
+  upwardsForce: 300
   movementTime: 0.1
   meleeAttack: 0
 --- !u!114 &8748388357885090105

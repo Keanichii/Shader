@@ -65,7 +65,7 @@ public enum PanDirection
     Right
 }
 
-[CustomEditor(typeof(CameraControlTrigger))]
+/*[CustomEditor(typeof(CameraControlTrigger))]
 public class MyScriptEditor : Editor
 {
     CameraControlTrigger cameraControlTrigger;
@@ -109,4 +109,4 @@ public class MyScriptEditor : Editor
         }    
 
     }
-}
+}*/
