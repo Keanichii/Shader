@@ -8,7 +8,7 @@ public class Hazards : MonoBehaviour
     {
         if(collision.CompareTag("Player"))
         {
-            collision.gameObject.GetComponent<TimeStop>().StopTime(0.05f, 10, 0.1f);
+            collision.gameObject.GetComponent<TimeStop>().StopTime(0.01f, 10, 0.1f);
         }
     }
 }
