@@ -1,11 +1,19 @@
-Shader "Unlit/TestShader3"
+Shader "Custom/TestShader3"
 {
     Properties
     {
         _MainTex("Diffuse", 2D) = "white" {}
         _MaskTex("Mask", 2D) = "white" {}
         _NormalMap("Normal Map", 2D) = "bump" {}
+        _Size("Size", float) = 2
+        _PixelResolution("Pixel Resolution", float) = 16
 
+        // Legacy properties. They're here so that materials using this shader can gracefully fallback to the legacy sprite shader.
+        [HideInInspector] _Color("Tint", Color) = (1,1,1,1)
+        [HideInInspector] _RendererColor("RendererColor", Color) = (1,1,1,1)
+        [HideInInspector] _Flip("Flip", Vector) = (1,1,1,1)
+        [HideInInspector] _AlphaTex("External Alpha", 2D) = "white" {}
+        [HideInInspector] _EnableExternalAlpha("Enable External Alpha", Float) = 0
     }
 
     SubShader
@@ -18,7 +26,6 @@ Shader "Unlit/TestShader3"
 
         Pass
         {
-            //define lightmo
             Tags { "LightMode" = "Universal2D" }
 
             HLSLPROGRAM
@@ -60,8 +67,6 @@ Shader "Unlit/TestShader3"
             TEXTURE2D(_MaskTex);
             SAMPLER(sampler_MaskTex);
             half4 _MainTex_ST;
-            float4 _Color;
-            half4 _RendererColor;
 
             #if USE_SHAPE_LIGHT_TYPE_0
             SHAPE_LIGHT(0)
@@ -92,15 +97,41 @@ Shader "Unlit/TestShader3"
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.lightingUV = half2(ComputeScreenPos(o.positionCS / o.positionCS.w).xy);
 
-                o.color = v.color * _Color * _RendererColor;
+                o.color = v.color;
                 return o;
             }
 
             #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/CombinedShapeLightShared.hlsl"
 
-            half4 CombinedShapeLightFragment(Varyings i) : SV_Target
+            float _Size;
+            float _PixelResolution;
+            float2 _SplatterPositions[20];
+            float _SplatterSizes[20];
+
+            // added this
+            float4 GetSplatter(Varyings i)
             {
-                const half4 main = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
+                // sample the texture
+                const float pixelSize = _Size * _PixelResolution;
+                const float2 uvPos = floor(i.uv * pixelSize) / pixelSize;
+
+                for (int idx = 0; idx < 20; idx++)
+                {
+                    const float dist = length(uvPos - _SplatterPositions[idx]);
+
+                    if (dist < _SplatterSizes[idx])
+                    {
+                        return (0, 0, 0, 1);
+                    }
+                }
+
+                return (0, 0, 0, 0);
+            }
+
+            float4 CombinedShapeLightFragment(Varyings i) : SV_Target
+            {
+                // to use it here
+                const half4 main =  i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv) * GetSplatter(i);
                 const half4 mask = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, i.uv);
                 SurfaceData2D surfaceData;
                 InputData2D inputData;
@@ -110,6 +141,8 @@ Shader "Unlit/TestShader3"
 
                 return CombinedShapeLightShared(surfaceData, inputData);
             }
+
+            
             ENDHLSL
         }
 
@@ -208,8 +241,6 @@ Shader "Unlit/TestShader3"
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
             float4 _MainTex_ST;
-            float4 _Color;
-            half4 _RendererColor;
 
             Varyings UnlitVertex(Attributes attributes)
             {
@@ -222,7 +253,7 @@ Shader "Unlit/TestShader3"
                 o.positionWS = TransformObjectToWorld(v.positionOS);
                 #endif
                 o.uv = TRANSFORM_TEX(attributes.uv, _MainTex);
-                o.color = attributes.color * _Color * _RendererColor;
+                o.color = attributes.color;
                 return o;
             }
 
@@ -250,5 +281,6 @@ Shader "Unlit/TestShader3"
             ENDHLSL
         }
     }
-  
+
+    Fallback "Sprites/Default"
 }

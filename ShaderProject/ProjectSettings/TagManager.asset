@@ -12,7 +12,7 @@ TagManager:
   - Water
   - UI
   - Ground
-  - 
+  - Light Layer Default
   - 
   - 
   - 
@@ -46,4 +46,7 @@ TagManager:
     locked: 0
   - name: Foreground
     uniqueID: 3031786995
+    locked: 0
+  - name: CameraSortingLayer
+    uniqueID: 4111907013
     locked: 0

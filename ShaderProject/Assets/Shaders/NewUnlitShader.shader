@@ -1,13 +1,11 @@
 Shader "Unlit/NewUnlitShader"
-{
+{//reference shader/ notes
     Properties
     {
         //Fields to pass in maps from inspector
         _MainTex ("Texture", 2D) = "white" {}
-        _Mask ("Mask", 2D) = "gray" {}
-        _Normal ("Normal Map", 2D) = "gray" {}
+        _TexMask ("Texture Mask", 2D) = "white" {}
         _MainColor ("Color", Color) = (1,1,1,1)
-        _LightColor ("Light Color", Color) = (1,1,1,1)
         [MaterialToggle] PixelSnap ("Pixel Snap", Float) = 0
     }
     SubShader
@@ -34,14 +32,14 @@ Shader "Unlit/NewUnlitShader"
             #pragma fragment frag
            
             #include "UnityCG.cginc"
-            
-            #define TAU 6.283185307179586
+            //use define to create custom variables
+            #define TAU 6.28
 
             //declare variables
 
             sampler2D _MainTex;
-            float4 _LightColor;
-
+            sampler2D _TexMask;
+            float4 _MainColor;
 
             //struct is for you to declare multiple variables at the same time, and attach semantics to them
             //input from application
@@ -58,8 +56,7 @@ Shader "Unlit/NewUnlitShader"
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
                 //float2 lightingUV : TEXCOORD2;
-                float3 normal : TEXCOORD1;
-                float4 diffuse : COLOR;
+                //float3 normal : TEXCOORD1;
             };
 
             
@@ -72,44 +69,69 @@ Shader "Unlit/NewUnlitShader"
                 output.vertex = UnityObjectToClipPos(input.vertex);
                 output.uv = input.uv;
                 //===========================================================
-
+                //vertex to world POSITION
                 float3 worldPos = mul(input.vertex, UNITY_MATRIX_M);
+
+                //calculate light vec
                 float3 lightVec = normalize(_WorldSpaceLightPos0 - worldPos);
-                output.normal = input.normal;
-                //float brightness = dot (inverseNormal, lightVec);
-                //float brightnessClamped = max (brightness, 0);
-
-                //output.diffuse = brightness * _LightColor;
-
-
-                //output.lightingUV = half2(ComputeScreenPos(output.vertex / output.vertex.w).xy);
-
-                //output.normal = input.normal;
+                
+                
 
                 return output;
             }
 
 
-            fixed4 _MainColor;
+            float4 Wave( float4 coord)
+            {
+                float4 wave = cos( (coord - _Time.y *2) * 10) *0.5 + 0.5 ;
+                wave *= 1-coord;
+                return wave;
+            }
+
+            /*float2 Ring( float2 uv)
+            {
+                float2 uvsCentered = uv * 2 - 1;
+
+            
+             }*/
+
 
             //pixel shader 
             float4 frag (v2f input) : SV_TARGET
             {
                 // sample the texture
                 float4 color = tex2D(_MainTex, input.uv);
-                //float2 lighting = input.lightingUV;
+                
+                float4 pattern = tex2D(_MainTex, input.uv);
+
                 color.rgb *= color.a;
+                pattern.rgb *= pattern.a;
                 //===============================================================
 
                 color *= _MainColor;
+                //pattern *= _MainColor;
+
+                //float t =  cos(10 * (input.uv.y - _Time.y)) * 0.5 + 0.5;
+                
+                float o = frac(_Time.y);
+                //frac(input * n) returns fractals ranging from 0 to 1 and repeat it n times.
+               
+
+                //saturate force-clamps values to 0 to 1 range. (less smoothing on the lines) 
+                //*0.5 - 0.5 will transform values to 0 to 1 range in cos(x) function. 
+                //same is true with sin(x) function.
+
+                //with linear functions, *2 - 1 will transform values to -1 to 1 range. 
+
+                //color *= t;
+                float4 output = Wave(pattern) * _MainColor;
+                
 
 
-                float t = saturate (cos((input.uv.y - _Time.y * 0.05) * TAU * 15) + 1);
+                
 
-                color *= t;
 
-                float3 output = input.normal * 2 - 1;
-                return float4 (output, 1);
+                return output;
             }
             ENDCG
         }
