@@ -88,15 +88,8 @@ Shader "Unlit/NewUnlitShader"
                 return wave;
             }
 
-            /*float2 Ring( float2 uv)
-            {
-                float2 uvsCentered = uv * 2 - 1;
 
-            
-             }*/
-
-
-            //pixel shader 
+            //fragment shader 
             float4 frag (v2f input) : SV_TARGET
             {
                 // sample the texture

@@ -60,7 +60,9 @@ Shader "Custom/GlowShader"
                 //sample em mask
                 float emissionMask = tex2D(_EmMask, i.uv);
 
+                //multiply mask by main color
                 float4 output = mul(emissionMask, _EmColor);
+                //combine with the sampled texture
                 output += color;
 
 

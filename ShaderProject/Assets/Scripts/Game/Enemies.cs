@@ -4,30 +4,33 @@ using UnityEngine;
 
 public class Enemies : MonoBehaviour
 {
-    #region VARIABLES
+    
     //Determines if this GameObject should receive damage or not
     [SerializeField]
     private bool damageable = true;
-    //The total number of health points the GameObject should have
-    [SerializeField]
-    private int healthAmount = 100;
-    //The max amount of time after receiving damage that the enemy can no longer receive damage; this is to help prevent the same melee attack dealing damage multiple times
+
+    //Help prevent the same melee attack dealing damage multiple times
     [SerializeField]
     private float invulnerabilityTime = .2f;
+
     //Allows the player to be forced up when performing a downward strike above the enemy
     public bool giveUpwardForce = true;
 
-
-
+    //Shock Wave Prefab Plug
+    public GameObject shockWave;
 
     //Bool that manages if the enemy can receive more damage
     private bool invulnerable;
+
     [SerializeField]
     private int currentHealth;
+
+    [SerializeField]
+    private int healthAmount = 100;
+
     //Coroutine that runs to allow the enemy to receive damage again
     private Coroutine turnOffInvulnerableCoroutine;
 
-    #endregion
 
     private void Start()
     {
@@ -43,6 +46,8 @@ public class Enemies : MonoBehaviour
             //turn on bool so enemy is invulnerable 
             invulnerable = true;
             currentHealth -= amount;
+            Instantiate(shockWave, transform.position, Quaternion.identity);
+            SwapShader.instance.SwapMaterials(1);
 
             if (currentHealth <= 0)
             {

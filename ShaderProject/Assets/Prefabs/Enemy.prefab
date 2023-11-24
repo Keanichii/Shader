@@ -111,6 +111,7 @@ GameObject:
   - component: {fileID: 6929557382267667574}
   - component: {fileID: 8208127492195217692}
   - component: {fileID: 444576235394446524}
+  - component: {fileID: 2029440292227787743}
   m_Layer: 0
   m_Name: orc07 (1)
   m_TagString: Untagged
@@ -218,10 +219,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageable: 1
-  healthAmount: 60
-  invulnerabilityTime: 0.2
+  invulnerabilityTime: 2
   giveUpwardForce: 1
+  shockWave: {fileID: 2514789288658076977, guid: 800ceb98eba3c6644b95140ab7efbcfb, type: 3}
   currentHealth: 0
+  healthAmount: 60
 --- !u!114 &6929557382267667574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,3 +304,18 @@ MonoBehaviour:
   pos2: {fileID: 4453065728573981709}
   speed: 2
   movingEnemy: 0
+--- !u!114 &2029440292227787743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4958779687949298536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2808e3c70f9d9f4c98438ae04d3beb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  materials:
+  - {fileID: 2100000, guid: cc7191a1416871a43ad4974e61a5f2ff, type: 2}
+  - {fileID: 2100000, guid: 2e5a5e5ecf9364547acf52d6dde0ad04, type: 2}

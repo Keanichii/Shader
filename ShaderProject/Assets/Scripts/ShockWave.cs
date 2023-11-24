@@ -8,10 +8,11 @@ public class ShockWave : MonoBehaviour
     private float shockwaveTime = 0.75f;
 
     private Coroutine shockwaveCoroutine;
+    private Coroutine stopCoroutine;
 
     private Material shockwaveMat;
 
-    private static int waveDistanceFromCenter = Shader.PropertyToID("waveDistanceFromCenter");
+    private static int waveDistanceFromCenter = Shader.PropertyToID("_DistFrmCenter");
 
     void Awake()
     {
@@ -26,6 +27,7 @@ public class ShockWave : MonoBehaviour
     public void CallShockWave()
     {
         shockwaveCoroutine = StartCoroutine(ShockWaveAction(-0.1f, 1.75f));
+        stopCoroutine = StartCoroutine(StopShockWave());
     }
 
     private IEnumerator ShockWaveAction(float startPos, float endPos)
@@ -42,10 +44,16 @@ public class ShockWave : MonoBehaviour
             lerpedAmount = Mathf.Lerp(startPos, endPos, elapsedTime/ shockwaveTime);
             shockwaveMat.SetFloat(waveDistanceFromCenter, lerpedAmount);
 
-
             yield return null;
         }
-
     }
+
+    private IEnumerator StopShockWave()
+    {
+        yield return new WaitForSeconds(shockwaveTime);
+        Destroy(gameObject);
+    }
+
+
 
 }

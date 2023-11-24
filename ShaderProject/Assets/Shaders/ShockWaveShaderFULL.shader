@@ -58,18 +58,22 @@ Shader "Custom/ShockWaveShaderFULL"
             {
                 //center uv
                 float2 uvsCentered = i.uv * 2 - 1;
+                //scale to screen ratio 1920:1080
                 uvsCentered.x *= 1.777;
                 float circle = length(uvsCentered);
+
+
                 //Distance from Center
                 float edge0 = _DistFrmCenter - _Size;
+                float edge1 = _DistFrmCenter + _Size;
                 float2 strgth = normalize(uvsCentered) * _Strength;
 
-                float edge1 = _DistFrmCenter + _Size;
 
                 //smoothstep
                 float smtstp = smoothstep(edge0, edge1, circle);
                 float ring = ((1 - smtstp) * smtstp) * strgth;
                 i.screenPos += ring;   
+
 
                 // sample the texture
                 fixed4 col = tex2D(_CameraSortingLayerTexture, i.screenPos);
