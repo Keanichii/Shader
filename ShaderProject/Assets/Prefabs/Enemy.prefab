@@ -219,7 +219,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageable: 1
-  invulnerabilityTime: 2
+  invulnerabilityTime: 1
   giveUpwardForce: 1
   shockWave: {fileID: 2514789288658076977, guid: 800ceb98eba3c6644b95140ab7efbcfb, type: 3}
   currentHealth: 0
@@ -316,6 +316,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2808e3c70f9d9f4c98438ae04d3beb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRender: {fileID: 0}
   materials:
   - {fileID: 2100000, guid: cc7191a1416871a43ad4974e61a5f2ff, type: 2}
   - {fileID: 2100000, guid: 2e5a5e5ecf9364547acf52d6dde0ad04, type: 2}
