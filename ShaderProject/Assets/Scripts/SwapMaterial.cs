@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SwapShader : MonoBehaviour
+public class SwapMaterial : MonoBehaviour
 {
-    public static SwapShader instance;
     public SpriteRenderer spriteRender;
     //array of materials used by this object
     public Material[] materials;
@@ -12,7 +11,6 @@ public class SwapShader : MonoBehaviour
     public void Start()
     {
         spriteRender = GetComponent<SpriteRenderer>();
-        instance = this;
     }
 
     //swap current material to the material from the array

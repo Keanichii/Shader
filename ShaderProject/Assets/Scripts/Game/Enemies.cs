@@ -31,11 +31,13 @@ public class Enemies : MonoBehaviour
     //Coroutine that runs to allow the enemy to receive damage again
     private Coroutine turnOffInvulnerableCoroutine;
 
+    private SwapMaterial swapMaterial;
 
     private void Start()
     {
         //Sets the enemy to the max amount of health when the scene loads
         currentHealth = healthAmount;
+        swapMaterial = GetComponent<SwapMaterial>();
     }
 
     public void Damage(int amount)
@@ -47,7 +49,7 @@ public class Enemies : MonoBehaviour
             invulnerable = true;
             currentHealth -= amount;
             Instantiate(shockWave, transform.position, Quaternion.identity);
-            SwapShader.instance.SwapMaterials(1);
+            swapMaterial.SwapMaterials(1);
 
             if (currentHealth <= 0)
             {
@@ -68,5 +70,6 @@ public class Enemies : MonoBehaviour
         yield return new WaitForSeconds(invulnerabilityTime);
         //Turn off the hit bool so the enemy can receive damage again
         invulnerable = false;
+        swapMaterial.SwapMaterials(0);
     }
 }
