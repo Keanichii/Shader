@@ -172,7 +172,7 @@ public class PlayerMovement : MonoBehaviour
 		if (CanSlide() && ((LastOnWallLeftTime > 0 && _moveInput.x < 0) || (LastOnWallRightTime > 0 && _moveInput.x > 0)))
         {
 			IsSliding = true;
-			Debug.Log("is sliding");
+			//Debug.Log("is sliding");
 		}
 		else
 			IsSliding = false;

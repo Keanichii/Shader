@@ -16,7 +16,7 @@ public class SwapMaterial : MonoBehaviour
     //swap current material to the material from the array
     public void SwapMaterials(int materialIndex)
     {
-        Debug.Log("Swap to" + materials[materialIndex].ToString());
+        //Debug.Log("Swap to" + materials[materialIndex].ToString());
         spriteRender.material = materials[materialIndex];
     }
 

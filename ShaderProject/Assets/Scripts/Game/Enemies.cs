@@ -19,6 +19,10 @@ public class Enemies : MonoBehaviour
     //Shock Wave Prefab Plug
     public GameObject shockWave;
 
+    [SerializeField]
+    private GameObject sparkObject;
+    private ParticleSystem spark;
+
     //Bool that manages if the enemy can receive more damage
     private bool invulnerable;
 
@@ -38,6 +42,7 @@ public class Enemies : MonoBehaviour
         //Sets the enemy to the max amount of health when the scene loads
         currentHealth = healthAmount;
         swapMaterial = GetComponent<SwapMaterial>();
+        spark = sparkObject.GetComponent<ParticleSystem>();
     }
 
     public void Damage(int amount)
@@ -49,6 +54,7 @@ public class Enemies : MonoBehaviour
             invulnerable = true;
             currentHealth -= amount;
             Instantiate(shockWave, transform.position, Quaternion.identity);
+            spark.Play();
             swapMaterial.SwapMaterials(1);
 
             if (currentHealth <= 0)
