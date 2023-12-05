@@ -36060,7 +36060,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultForce: 75
-  upwardsForce: 250
+  upwardsForce: 200
   movementTime: 0.05
   meleeAttack: 0
 --- !u!61 &8382463103062632265
