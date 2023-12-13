@@ -50,7 +50,7 @@ Shader "Unlit/NewUnlitShader"
                 float3 normal : NORMAL;
             };
 
-            //output to pixel shader
+            //output to fragment shader
             struct v2f
             {
                 float2 uv : TEXCOORD0;
