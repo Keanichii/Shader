@@ -47657,7 +47657,7 @@ Transform:
   m_GameObject: {fileID: 553109290219000830}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 55.99, y: -7.09, z: 0}
+  m_LocalPosition: {x: 30.71, y: -0.43, z: 0}
   m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -47697,7 +47697,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultForce: 75
-  upwardsForce: 215
+  upwardsForce: 500
   movementTime: 0.05
   meleeAttack: 0
 --- !u!61 &8382463103062632265

@@ -37,7 +37,7 @@ public class MeleeWeapon : MonoBehaviour
         //Checks to see if the GameObject the MeleeWeapon is colliding with has an EnemyHealth script
         if (collision.GetComponent<Enemies>())
         {
-                Debug.Log("In range");
+                //Debug.Log("In range");
                 //Method that checks to see what force can be applied to the player when melee attacking
                 HandleCollision(collision.GetComponent<Enemies>());
         }
@@ -47,7 +47,7 @@ public class MeleeWeapon : MonoBehaviour
     private void HandleCollision(Enemies objHealth)
     {
         
-            Debug.Log("Is attacking");
+            //Debug.Log("Is attacking");
             //Checks to see if the GameObject allows for upward force and if the strike is downward as well as grounded
             if (objHealth.giveUpwardForce && Input.GetAxis("Vertical") < 0 && !player.isGrounded)
             {
@@ -57,7 +57,7 @@ public class MeleeWeapon : MonoBehaviour
                 downwardStrike = true;
                 //Sets collided to true
                 collided = true;
-            }
+        }
             if (Input.GetAxis("Vertical") > 0 && !player.isGrounded)
             {
                 //Sets the direction variable to up
@@ -103,7 +103,9 @@ public class MeleeWeapon : MonoBehaviour
                 //If the attack was in a downward direction
                 if (downwardStrike)
                 {
-                    //Propels the player upwards by the amount of upwardsForce in the meleeAttackManager script
+                //Propels the player upwards by the amount of upwardsForce in the meleeAttackManager script
+                    rb.velocity = new Vector2(rb.velocity.x, 0f);
+                    Debug.Log("downward strike " + downwardStrike);
                     rb.AddForce(direction * meleeAttackManager.upwardsForce);
                 }
                 else
