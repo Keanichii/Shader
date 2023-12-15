@@ -5,6 +5,7 @@ Shader "Custom/GlowShader"
         _MainTex ("Texture", 2D) = "white" {}
         _EmMask ("Emission Mask", 2D) = "black" {}
         _EmColor ("Emission Color", Color) = (1,1,1,1)
+        _TintColor ("Tint Color", Color) = (1,1,1,1)
     }
 
     SubShader
@@ -27,6 +28,7 @@ Shader "Custom/GlowShader"
             sampler2D _MainTex;
             sampler2D _EmMask;
             float4 _EmColor;
+            float4 _TintColor;
 
             struct appdata
             {
@@ -56,6 +58,7 @@ Shader "Custom/GlowShader"
                 //sample main tex
                 float4 color = tex2D(_MainTex, i.uv);
                 color.rgb *= color.a;
+                color *= _TintColor;
 
                 //sample em mask
                 float emissionMask = tex2D(_EmMask, i.uv);
