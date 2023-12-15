@@ -15,10 +15,19 @@ public class GameManager : MonoBehaviour
         shards = 0;
     }
 
+    private void Update()
+    {
+        if (shards < 0)
+        {
+            Debug.Log("GAME OVER");
+            SceneManager.LoadScene("GameOver");
+        }
+    }
+
 
     public void EndGame()
     {
-        Debug.Log("GAME OVER");
+        Debug.Log("WIN");
         SceneManager.LoadScene("GameOver");
     }
     
@@ -28,6 +37,10 @@ public class GameManager : MonoBehaviour
         Debug.Log("You now have " + shards + " shards");
     }
 
-
+    public void LoseSoul()
+    {
+        shards -= 5;
+        Debug.Log("You now have " + shards + " shards");
+    }    
 
 }

@@ -27,6 +27,11 @@ public class UIBar : MonoBehaviour
         rect.anchoredPosition = new Vector2(Mathf.Clamp(xPos, 18, width), 0); 
     }
 
-
+    public void LoseSoulUI()
+    {
+        xPos = rect.anchoredPosition.x;
+        xPos -= 25;
+        rect.anchoredPosition = new Vector2(Mathf.Clamp(xPos, 18, width), 0);
+    }
 
 }
