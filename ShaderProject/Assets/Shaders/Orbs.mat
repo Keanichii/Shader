@@ -48,7 +48,7 @@ Material:
     - _EnableExternalAlpha: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EmColor: {r: 0.7110157, g: 0.31510323, b: 0.9150943, a: 1}
+    - _EmColor: {r: 0.70628625, g: 0.43961373, b: 0.8396226, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _TintColor: {r: 1, g: 0.7028302, b: 0.9150944, a: 1}

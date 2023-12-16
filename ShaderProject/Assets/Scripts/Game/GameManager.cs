@@ -8,8 +8,10 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public static float shards;
+    public GameObject player;
+    public GameObject spawnpoint;
 
-    private void Awake()
+    private void Start()
     {
         instance = this;
         shards = 0;
